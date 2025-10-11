@@ -22,7 +22,7 @@ def get_upcoming_birthdays(users: list[dict[str, str]]) -> list[dict[str, str]]:
                 "name": user["name"],
                 "congratulation_date": birthday_this_year.strftime(DATE_FORMAT)
             })
-            
+
     return birthdays
     
 
@@ -46,4 +46,3 @@ users = [
 upcoming_birthdays = get_upcoming_birthdays(users)
 print("Список привітань на цьому тижні:", upcoming_birthdays)
 
-# PS: copilot tested and added - якщо день народження на вихідних, то привітати потрібно в понеділок.
