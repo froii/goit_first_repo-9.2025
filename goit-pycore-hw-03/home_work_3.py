@@ -16,9 +16,15 @@ def normalize_phone(phone_number: str) -> str:
             return 'phone_number must be a string'
         
         only_numbers = re.sub(r'[^0-9]', '', phone_number)
+            
+        if phone_number.startswith('+'):
+            return only_numbers
         
-        return f"+{'' if phone_number[0] == '+' else UKRAINIAN_CODE}{only_numbers}"
-               
+        elif only_numbers.startswith('38'):
+            return '+' + only_numbers
+
+        return '+38' + only_numbers
+
     except Exception:
         return "Please, use correct phone number"
 
@@ -33,7 +39,7 @@ raw_numbers = [
     "    +38(050)123-32-34",
     "     0503451234",
     "(050)8889900",
-    "38050-111-22-22",
+    "83050-111-22-22",
     "38050 111 22 11   ",
 ]
 
