@@ -21,7 +21,7 @@ def normalize_phone(phone_number: str) -> str:
         if len(only_numbers) not in (PHONE_NUMBER_LEN, PHONE_NUMBER_LEN + len(INTERNATIONAL_CODE)):
             return "Please, use correct phone number"
 
-        return f"+{'' if only_numbers.startswith('380') else '38'}{only_numbers}"
+        return f"+{'' if only_numbers.startswith(INTERNATIONAL_CODE) else '38'}{only_numbers}"
        
     except Exception:
         return "Please, use correct phone number"
