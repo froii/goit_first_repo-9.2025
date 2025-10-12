@@ -17,10 +17,10 @@ def normalize_phone(phone_number: str) -> str:
         
         only_numbers = re.sub(r'[^0-9]', '', phone_number)
 
-        if phone_number.startswith(('00', '+00')):
+        if phone_number.startswith('+00') or only_numbers.startswith('00'):
             return only_numbers
         
-        elif phone_number.startswith(('+', '38')):
+        elif phone_number.startswith('+') or only_numbers.startswith('38'):
             return '+' + only_numbers
 
         return UKRAINIAN_CODE + only_numbers
@@ -37,7 +37,6 @@ raw_numbers = [
     "    +38(050)123-32-34",
     "     0503451234",
     "(050)8889900",
-    "83050-111-22-22",
     "38050 111 22 11   ",
     "+1 (202) 555-0173",         # USA
     "+44 20 7946 0958",          # UK
