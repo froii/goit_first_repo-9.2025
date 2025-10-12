@@ -8,9 +8,7 @@
 
 import re 
 
-INTERNATIONAL_CODE = '38'
-PHONE_NUMBER_LEN = 10
-PHONE_NUMBER_WITH_CODE_LEN = PHONE_NUMBER_LEN + len(INTERNATIONAL_CODE)
+UKRAINIAN_CODE = "38"
 
 def normalize_phone(phone_number: str) -> str:
     try:
@@ -18,18 +16,9 @@ def normalize_phone(phone_number: str) -> str:
             return 'phone_number must be a string'
         
         only_numbers = re.sub(r'[^0-9]', '', phone_number)
-        len_only_numbers = len(only_numbers)
-
-        if len_only_numbers not in (PHONE_NUMBER_LEN, PHONE_NUMBER_WITH_CODE_LEN):
-            return "Please, use correct phone number"
-
-        if len_only_numbers == PHONE_NUMBER_WITH_CODE_LEN and only_numbers.startswith(INTERNATIONAL_CODE):
-            return f"+{only_numbers}"
-        elif len_only_numbers == PHONE_NUMBER_LEN:
-            return f"+{INTERNATIONAL_CODE}{only_numbers}"
         
-        return  "Please, use correct phone number"
-       
+        return f"+{'' if phone_number[0] == '+' else UKRAINIAN_CODE}{only_numbers}"
+               
     except Exception:
         return "Please, use correct phone number"
 
