@@ -58,7 +58,7 @@ def display_log_counts(counts: dict):
 
 # виводить логи певного типу / рівня
 def display_filtered_logs(logs: list, log_type: str):
-    print(f"Logs details for level '{log_type}':")
+    print(f"Logs details for level '{log_type.upper()}':")
     for log in logs:
         print(f"{log['date']} {log['time']} - {log['message'].strip()}")
 
