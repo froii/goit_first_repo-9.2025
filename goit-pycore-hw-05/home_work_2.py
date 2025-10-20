@@ -6,7 +6,6 @@ import re
 # (?= |$) - пробіл або кінець рядка
 # (?:...) групує і зберігає пам'ять без створення окремої групи в match.groups().
 # (\d+(?:\.\d{1,2})?) - захоплює ціле число яке можливо має десяткове число з 1 чи 2 знаками після коми.
-
 def generator_numbers(text: str) -> Iterator[float]:
     pattern = r'(?:^| )(\d+(?:\.\d{1,2})?)(?= |$)'
     for match in re.finditer(pattern, text):
