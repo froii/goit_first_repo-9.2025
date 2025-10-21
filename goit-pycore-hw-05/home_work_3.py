@@ -29,9 +29,12 @@ def load_logs(file_path: str) -> list:
     return logs
 
 # Реалізуйте функцію filter_logs_by_level(logs: list, level: str) -> list для фільтрації логів за рівнем.
+# def filter_logs_by_type(logs: list, type: str) -> list:
+#     sorted_logs = filter(lambda log: log['type'] == type.upper(), logs)
+#     return list(sorted_logs)
 def filter_logs_by_type(logs: list, type: str) -> list:
-    sorted_logs = filter(lambda log: log['type'] == type.upper(), logs)
-    return list(sorted_logs)
+    return [log for log in logs if log['type'] == type.upper()]
+
 
 # Реалізуйте функцію count_logs_by_level(logs: list) -> dict для підрахунку записів за рівнем логування.
 def count_logs_by_type(logs: list) -> dict:
