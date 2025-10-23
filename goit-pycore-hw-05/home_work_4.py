@@ -13,14 +13,19 @@ DATA_FILE = Path(__file__).resolve().parent / "path/to/phone_book.txt"
 # повертає відповідні повідомлення про помилку.
 # Коректна реакція бота на різні команди та обробка помилок введення без завершення програми.
 
-#  якщо зрозумів правильно, то є тільки 1 текст для всіх помилок. 
+# якщо зрозумів правильно, то є тільки 1 текст для всіх помилок. 
+# в завдані є тільки одна помилка, хоча я згоден - одна помилка для всіх логів це погана ідея, але ж так написано )
 def input_error(func):
     @wraps(func)
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except (KeyError, ValueError, IndexError):
-            return "Enter the argument for the command"
+        except KeyError:
+            return "Contact not found. Use 'add <name> <phone>' to create it first."
+        except ValueError:
+            return "Please provide both a name and a phone number."
+        except IndexError:
+            return "Please specify the contact name after the command."
     return inner
 
 
@@ -50,18 +55,12 @@ def add_contact(args, contacts):
 @input_error
 def change_contact(args, contacts):
     name, phone = args
-    if name not in contacts:
-        raise KeyError(name)
     contacts[name] = phone
     return "Contact updated."
 
 @input_error
 def get_phone(args, contacts):
-    if not args:
-        raise IndexError
     name = args[0]
-    if name not in contacts:
-        raise KeyError(name)
     return contacts[name]
 
 def get_all_contacts(contacts):
