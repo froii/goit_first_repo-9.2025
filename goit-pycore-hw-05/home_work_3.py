@@ -7,12 +7,12 @@ import sys
 # python home_work_3.py ./logs/logs.log info
 # python home_work_3.py ./logs/logs.log debuggg
 
-LOG_TYPES = ['INFO', 'ERROR', 'DEBUG', 'WARNING']
+LOG_LEVELS = ['INFO', 'ERROR', 'DEBUG', 'WARNING']
 
 # Реалізуйте функцію parse_log_line(line: str) -> dict для парсингу рядків логу.
 def parse_log_line(line: str) -> dict:
-    date, time, type, message = line.split(" ", maxsplit=3)
-    return { "date": date, "time": time, "type": type, "message": message }
+    date, time, level, message = line.split(" ", maxsplit=3)
+    return { "date": date, "time": time, "level": level, "message": message }
 
 # Реалізуйте функцію load_logs(file_path: str) -> list для завантаження логів з файлу.
 def load_logs(file_path: str) -> list:
@@ -32,19 +32,19 @@ def load_logs(file_path: str) -> list:
 # def filter_logs_by_type(logs: list, type: str) -> list:
 #     sorted_logs = filter(lambda log: log['type'] == type.upper(), logs)
 #     return list(sorted_logs)
-def filter_logs_by_type(logs: list, type: str) -> list:
-    return [log for log in logs if log['type'] == type.upper()]
+def filter_logs_by_level(logs: list, level: str) -> list:
+    return [log for log in logs if log['level'] == level.upper()]
 
 
 # Реалізуйте функцію count_logs_by_level(logs: list) -> dict для підрахунку записів за рівнем логування.
-def count_logs_by_type(logs: list) -> dict:
-    types_count = {}
+def count_logs_by_level(logs: list) -> dict:
+    levels_count = {}
     for log in logs:
-        type = log['type']
-        #  немає counts[type] || 0 навіть через or - викличе KeyError при спробі прочитати неіснуючий ключ до того, як спрацює оператор 'or' -
+        level = log['level']
+        #  немає counts[level] || 0 навіть через or - викличе KeyError при спробі прочитати неіснуючий ключ до того, як спрацює оператор 'or' -
         #  так само як і в if, тому не працює спрощення перевірок типів і наявності даних ( потрібні явні перевірки if key in dict and dict[key]:)
-        types_count[type] = types_count.get(type, 0) + 1
-    return types_count
+        levels_count[level] = levels_count.get(level, 0) + 1
+    return levels_count
 
 # створює header таблиці
 def display_log_table_header():
@@ -55,13 +55,13 @@ def display_log_table_header():
 def display_log_counts(counts: dict):
     display_log_table_header()
 
-    for log_type in LOG_TYPES:
-        count = counts.get(log_type, 0)
-        print(f"{log_type:<20} | {count:<10}")
+    for log_level in LOG_LEVELS:
+        count = counts.get(log_level, 0)
+        print(f"{log_level:<20} | {count:<10}")
 
 # виводить логи певного типу / рівня
-def display_filtered_logs(logs: list, log_type: str):
-    print(f"Logs details for level '{log_type.upper()}':")
+def display_filtered_logs(logs: list, log_level: str):
+    print(f"Logs details for level '{log_level.upper()}':")
     for log in logs:
         print(f"{log['date']} {log['time']} - {log['message'].strip()}")
 
@@ -74,16 +74,16 @@ if __name__ == '__main__':
         
         path = sys.argv[1]
         logs = load_logs(path)
-        counts = count_logs_by_type(logs)
+        counts = count_logs_by_level(logs)
         display_log_counts(counts)
 
         if len(sys.argv) >= 3:
-            if sys.argv[2].upper() not in LOG_TYPES:
-                print(f"Unknown log type: {sys.argv[2]}")
+            if sys.argv[2].upper() not in LOG_LEVELS:
+                print(f"Unknown log level: {sys.argv[2]}")
                 sys.exit(1)
-            log_type = sys.argv[2]
-            filtered_logs = filter_logs_by_type(logs, log_type)
-            display_filtered_logs(filtered_logs, log_type)
+            log_level = sys.argv[2]
+            filtered_logs = filter_logs_by_level(logs, log_level)
+            display_filtered_logs(filtered_logs, log_level)
 
     except (FileNotFoundError, OSError):
         print(f"Wrong file path {path}")
