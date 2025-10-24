@@ -1,11 +1,10 @@
 import json
+import os
 from pathlib import Path
 from functools import wraps
-
 from datetime import datetime
 
 DATA_FILE = Path(__file__).resolve().parent / "path/to/phone_book.txt"
-
 
 
 # Критерії оцінювання:
@@ -15,6 +14,11 @@ DATA_FILE = Path(__file__).resolve().parent / "path/to/phone_book.txt"
 # повертає відповідні повідомлення про помилку.
 # Коректна реакція бота на різні команди та обробка помилок введення без завершення програми.
 
+def write_log(message, filename='errors.log'):
+    log_file = Path(__file__).resolve().parent / filename
+    with open(log_file, 'a', encoding='utf-8') as f:
+        f.write(message + '\n')
+
 # якщо зрозумів правильно, то є тільки 1 текст для всіх помилок. 
 # в завдані є тільки одна помилка, хоча я згоден - одна помилка для всіх логів це погана ідея, але ж так написано )
 def decorator_input_error(level="INFO"):
@@ -22,14 +26,22 @@ def decorator_input_error(level="INFO"):
         @wraps(func)
         def inner(*args, **kwargs):
             date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            main_logger_part = f"{date} {level} In function {func.__name__} -"
+
             try:
                 return func(*args, **kwargs)
             except KeyError:
-                return f"{date} {level} In function {func.__name__} - Contact not found. Use 'add <name> <phone>' to create it first."
+                message = f"{main_logger_part} Contact not found. Use 'add <name> <phone>' to create it first."
+                write_log(message)
+                return message
             except ValueError:
-                return f"{date} {level} In function {func.__name__} - Please provide both a name and a phone number."
+                message = f"{main_logger_part} Please provide both a name and a phone number."
+                write_log(message)
+                return message
             except IndexError:
-                return f"{date} {level} In function {func.__name__} - Please specify the contact name after the command."
+                message = f"{main_logger_part} Please specify the contact name after the command."
+                write_log(message)
+                return message
         return inner
     return input_error
 
