@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from functools import wraps
 
+from datetime import datetime
+
 DATA_FILE = Path(__file__).resolve().parent / "path/to/phone_book.txt"
 
 
@@ -15,20 +17,21 @@ DATA_FILE = Path(__file__).resolve().parent / "path/to/phone_book.txt"
 
 # якщо зрозумів правильно, то є тільки 1 текст для всіх помилок. 
 # в завдані є тільки одна помилка, хоча я згоден - одна помилка для всіх логів це погана ідея, але ж так написано )
-def input_error(func):
-    @wraps(func)
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except KeyError:
-            return "Contact not found. Use 'add <name> <phone>' to create it first."
-        except ValueError:
-            return "Please provide both a name and a phone number."
-        except IndexError:
-            return "Please specify the contact name after the command."
-    return inner
-
-
+def decorator_input_error(level="INFO"):
+    def input_error(func):
+        @wraps(func)
+        def inner(*args, **kwargs):
+            date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            try:
+                return func(*args, **kwargs)
+            except KeyError:
+                return f"{date} {level} In function {func.__name__} - Contact not found. Use 'add <name> <phone>' to create it first."
+            except ValueError:
+                return f"{date} {level} In function {func.__name__} - Please provide both a name and a phone number."
+            except IndexError:
+                return f"{date} {level} In function {func.__name__} - Please specify the contact name after the command."
+        return inner
+    return input_error
 
 
 def load_contacts(filename):
@@ -46,19 +49,19 @@ def parse_input(user_input):
     cmd, *args = user_input.split()
     return cmd.lower(), args
 
-@input_error
+@decorator_input_error('ERROR')
 def add_contact(args, contacts):
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
-@input_error
+@decorator_input_error('WARNING')
 def change_contact(args, contacts):
     name, phone = args
     contacts[name] = phone
     return "Contact updated."
 
-@input_error
+@decorator_input_error()
 def get_phone(args, contacts):
     name = args[0]
     return contacts[name]
