@@ -144,7 +144,7 @@ def common_mistakes():
     # Помилка 1: Забули ord()
     try:
         table = {'a': 'X'}
-        result = "abc".translate(table)
+        result = "abc".translate(table['a'])
         print(result)  # просто поверне 'abc' . помилок не буде
     except TypeError as e:  
         print(f"❌ Помилка без ord(): {e}")  # не буде помилки але і змін не буде
