@@ -130,36 +130,36 @@ print(f"Є знижки: {any_discount}")
 
 
 # Модуль 5: замикання
-def greeting_maker(base_greeting):
+def greeting_maker2(base_greeting):
     def greeter(name):
         return f"{base_greeting}, {name}!"
 
     return greeter
 
 
-greet_formal = greeting_maker("Доброго дня")
-greet_informal = greeting_maker("Привіт")
+greet_formal = greeting_maker2("Доброго дня")
+greet_informal = greeting_maker2("Привіт")
 print(greet_formal("Пане Володимире"))
 print(greet_informal("Олено"))
 
 
 # Модуль 5: каррування
-def tax_calculator(tax_rate_percent):
+def tax_calculator2(tax_rate_percent):
     def apply_tax(amount):
         return amount * (tax_rate_percent / 100)
 
     return apply_tax
 
 
-calculate_pdv = tax_calculator(20)
-calculate_military_tax = tax_calculator(1.5)
+calculate_pdv = tax_calculator2(20)
+calculate_military_tax = tax_calculator2(1.5)
 salary = 50000
 print(f"ПДВ з {salary}: {calculate_pdv(salary)}")
 print(f"ВЗ з {salary}: {calculate_military_tax(salary)}")
 
 
 # Модуль 5: декоратори
-def timer(func):
+def timer2(func):
     @wraps(func)
     def wrapper(
         *args,
@@ -177,8 +177,8 @@ def timer(func):
     return wrapper
 
 
-@timer
-def process_data(n):
+@timer2
+def process_data2(n):
     """Дуже важлива функція, що довго працює."""
     total = 0
     for i in range(n):
@@ -186,9 +186,9 @@ def process_data(n):
     return total
 
 
-result = process_data(1_000_000)
-print(f"Ім'я функції: {process_data.__name__}")
-print(f"Докстрінг: {process_data.__doc__}")
+result = process_data2(1_000_000)
+print(f"Ім'я функції: {process_data2.__name__}")
+print(f"Докстрінг: {process_data2.__doc__}")
 
 # Модуль 6: decimal
 print(f"Проблема: 0.1 + 0.2 = {0.1 + 0.2}")
