@@ -28,17 +28,48 @@ class Phone(Field):
 
 class Birthday(Field):
     def __init__(self, value):
-        try:
-            if self.validate(value):
-                # та перетворіть рядок на об'єкт datetime
-                date = datetime.strptime(value, DATE_FORMAT)
-                super().__init__(date)
-        except ValueError:
-            raise ValueError("Invalid date format. Use DD.MM.YYYY")
+        if self.validate(value):
+            # та перетворіть рядок на об'єкт datetime
+            date = datetime.strptime(value, DATE_FORMAT)
+            super().__init__(date)
 
     # Додайте перевірку коректності даних
+    # def validate(self, date):
+    #     return re.fullmatch(r"\d{1,2}\.\d{1,2}\.\d{4}", date) is not None
+
     def validate(self, date):
-        return re.fullmatch(r"\d{1,2}\.\d{1,2}\.\d{4}", date) is not None
+        # 1. Перевірка базового формату (DD.MM.YYYY)
+        if not re.fullmatch(r"\d{1,2}\.\d{1,2}\.\d{4}", date):
+            return False
+
+        try:
+            # 2. Перевірка чи дата реально існує (не 31.02.2024 наприклад)
+            parsed_date = datetime.strptime(date, DATE_FORMAT)
+
+            # 3. Перевірка що рік в розумних межах (не в майбутньому, не занадто давно)
+            current_year = datetime.now().year
+            if parsed_date.year > current_year:
+                raise ValueError("Дата народження не може бути в майбутньому")
+
+            # Перевірка мінімального року (наприклад, не раніше 1900)
+            if parsed_date.year < 1900:
+                raise ValueError("Дата народження занадто давня (раніше 1900 року)")
+
+            # 4. Перевірка максимального віку (наприклад, не більше 150 років)
+            age = current_year - parsed_date.year
+            if age > 150:
+                raise ValueError("Вік не може перевищувати 150 років")
+
+            # 5. Перевірка що день і місяць в допустимих межах
+            if not (1 <= parsed_date.day <= 31):
+                raise ValueError("День має бути від 1 до 31")
+            if not (1 <= parsed_date.month <= 12):
+                raise ValueError("Місяць має бути від 1 до 12")
+
+            return True
+
+        except ValueError:
+            raise ValueError("Invalid date format. Use DD.MM.YYYY")
 
 
 # Record: Клас для зберігання інформації про контакт, включаючи ім'я та список телефонів.
