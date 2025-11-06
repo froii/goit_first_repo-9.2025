@@ -1,5 +1,95 @@
 {
-    "python.languageServer": "None",
-    "python.analysis.typeCheckingMode": "off",
-    "workbench.settings.useSplitJSON": true
+    // Загальні налаштування редактора
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.trimAutoWhitespace": true,
+    "editor.wordWrap": "on",
+    "editor.rulers": [
+        79,
+        120
+    ],
+    "editor.gotoLocation.multipleDefinitions": "goto",
+    "editor.suggestSelection": "first",
+    "editor.acceptSuggestionOnEnter": "on",
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": false
+    },
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.linkedEditing": true,
+    "editor.minimap.enabled": true,
+    // Налаштування файлів
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/.pytest_cache": true,
+        "**/.mypy_cache": true,
+        "**/venv": true,
+        "**/.venv": true,
+        "**/.env": false
+    },
+    // Python налаштування
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.autoFormatStrings": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.languageServer": "Pylance",
+    // Форматування Python
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit"
+        },
+        "editor.rulers": [
+            79,
+            120
+        ]
+    },
+    // autopep8 налаштування (виправляє відступи автоматично)
+    "autopep8.args": [
+        "--max-line-length=120",
+        "--aggressive",
+        "--aggressive"
+    ],
+    // Pylint налаштування
+    "pylint.args": [
+        "--max-line-length=120",
+        "--disable=C0111"
+    ],
+    // Налаштування терміналу
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.cursorBlinking": true,
+    // Git налаштування
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    // Інші корисні налаштування
+    "breadcrumbs.enabled": true,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "problems.showCurrentInStatus": true,
+    // Налаштування інтелісенсу
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.importFormat": "absolute",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnusedImport": "information",
+        "reportUnusedVariable": "information"
+    }
 }
