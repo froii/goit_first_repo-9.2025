@@ -91,5 +91,5 @@
     "python.analysis.diagnosticSeverityOverrides": {
         "reportUnusedImport": "information",
         "reportUnusedVariable": "information"
-    }
+    },
 }

@@ -161,13 +161,9 @@ print(f"ВЗ з {salary}: {calculate_military_tax(salary)}")
 # Модуль 5: декоратори
 def timer2(func):
     @wraps(func)
-    def wrapper(
-        *args,
-    ):
+    def wrapper(*args):
         start_time = time.perf_counter()
-        result = func(
-            *args,
-        )
+        result = func(*args)
         end_time = time.perf_counter()
         print(
             f"Функція '{func.__name__}' виконувалась {end_time - start_time:.4f} сек."
