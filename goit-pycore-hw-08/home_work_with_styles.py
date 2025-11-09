@@ -3,6 +3,10 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import questionary
+from rich.console import Console
+from rich.table import Table
+
 DATE_FORMAT = "%d.%m.%Y"
 BOOK_FILE_PATH = Path(__file__).resolve().parent / "files/addressbook.pkl"
 
@@ -280,6 +284,27 @@ def hello(_, __):
     return "Hello! How can I help you?"
 
 
+def show_help(_, __):
+    console = Console()
+
+    table = Table(title="Available Commands", show_header=True, header_style="bold cyan")
+    table.add_column("Command", style="green", width=30)
+    table.add_column("Arguments", style="cyan", width=20)
+    table.add_column("Description", style="white")
+
+    table.add_row("add", "[name] [phone]", "Add new contact", style="italic")
+    table.add_row("change", "[name] [old] [new]", "Change phone number", style="italic")
+    table.add_row("phone", "[name]", "Show phone number", style="italic")
+    table.add_row("all | list", "", "Show all contacts", style="italic")
+    table.add_row("add-birthday | add-b", "[name] [DD.MM.YYYY]", "Add birthday", style="italic")
+    table.add_row("show-birthday", "[name]", "Show birthday", style="italic")
+    table.add_row("birthdays", "", "Upcoming birthdays (7 days)", style="italic")
+    table.add_row("exit | close", "", "Exit program", style="italic")
+
+    console.print(table, markup=False)
+    return ""
+
+
 def main():
     book = load_data()
     print("Welcome to the assistant bot!")
@@ -293,14 +318,33 @@ def main():
             "list": all,
             "show-birthday": show_birthday,
             "add-b": add_birthday,
-            "list-bs": birthdays,
+            "birthdays": birthdays,
+            "hi": hello,
             "hello": hello,
+            "help": show_help,
         }
 
+        custom_style = questionary.Style([
+            ('qmark', ''),
+            ('question', 'fg:#ffff00 bold'),
+            ('answer', 'bg:#0000aa fg:#ffcc00 bold'),
+            ('text', 'fg:#cccccc'),
+            ('selected', 'bg:#00aaaa fg:#000000'),
+        ])
+
         while True:
-            user_input = input("Enter a command: ")
+            user_input = questionary.autocomplete(
+                "Enter command:",
+                choices=list(commands.keys()) + ["close", "exit"],
+                style=custom_style
+            ).ask()
+
+            if user_input is None:
+                print("\nProgram finished.\n -Have a good day user! ©Tron.\n")
+                break
+
             if not user_input.strip():
-                print("Please enter a command.")
+                print("Please enter a command user.")
                 continue
 
             command, *args = user_input.split()
@@ -317,7 +361,7 @@ def main():
                 print("Invalid command.")
 
     except KeyboardInterrupt:
-        print("\nProgram finished.\n -Have a good day user! ©Tron.")
+        print("\nProgram finished.\n -Have a good day user! ©Tron.\n ")
     finally:
         save_data(book=book)
 
