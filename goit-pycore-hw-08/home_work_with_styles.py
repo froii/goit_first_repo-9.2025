@@ -3,20 +3,48 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from pathlib import Path
 
-import questionary
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.styles import Style
 from rich.console import Console
 from rich.table import Table
 
 DATE_FORMAT = "%d.%m.%Y"
 BOOK_FILE_PATH = Path(__file__).resolve().parent / "files/addressbook.pkl"
 
-# Реалізуйте функціонал для збереження стану AddressBook у файл при
-# закритті програми та відновлення стану при її запуску.
+CONTACTS_COLUMNS = [
+    {"name": "Name", "style": "green", "width": 20},
+    {"name": "Phones", "style": "cyan", "width": 30},
+    {"name": "Birthday", "style": "magenta", "width": 15}
+]
 
-# Критерії оцінювання:
-# Реалізовано протокол серіалізації / десеріалізації даних за допомогою pickle.
-# Усі дані повинні зберігатися при виході з програми.
-# При новому сеансі адресна книга, яка була при попередньому запуску, повинна бути в застосунку.
+BIRTHDAYS_COLUMNS = [
+    {"name": "Name", "style": "green", "width": 20},
+    {"name": "Congratulation Date", "style": "magenta", "width": 20}
+]
+
+HELP_COLUMNS = [
+    {"name": "Command", "style": "green", "width": 30},
+    {"name": "Arguments", "style": "cyan", "width": 20},
+    {"name": "Description", "style": "white"}
+]
+
+
+def create_table(title, columns, rows, markup=False):
+    console = Console()
+    table = Table(title=title, show_header=True, header_style="bold cyan")
+
+    for col in columns:
+        table.add_column(
+            col.get("name", ""),
+            style=col.get("style", "white"),
+            width=col.get("width", None)
+        )
+
+    for row in rows:
+        table.add_row(*row)
+
+    console.print(table, markup=markup)
 
 
 def save_data(book, path=BOOK_FILE_PATH):
@@ -230,13 +258,14 @@ def all(_, book):
     if not book.data:
         return "No contacts in address book."
 
-    result = []
+    rows = []
     for record in book.data.values():
         phones = ", ".join(phone.value for phone in record.phones)
-        birthday = f"; birthday: {record.birthday.value.strftime(DATE_FORMAT)}" if record.birthday else ""
-        result.append(f"Contact name: {record.name.value}; phones: {phones} {birthday}")
+        birthday = record.birthday.value.strftime(DATE_FORMAT) if record.birthday else "-"
+        rows.append([record.name.value, phones, birthday])
 
-    return "\n".join(result)
+    create_table("All Contacts", CONTACTS_COLUMNS, rows)
+    return ""
 
 
 @input_error
@@ -276,7 +305,10 @@ def birthdays(_, book):
     if not upcoming_birthdays:
         return "No upcoming birthdays in the next week."
 
-    return "Upcoming birthdays:\n" + "\n".join(f"{b['name']}:{b['congratulation_date']}" for b in upcoming_birthdays)
+    rows = [[b['name'], b['congratulation_date']] for b in upcoming_birthdays]
+
+    create_table("Upcoming Birthdays (Next 7 Days)", BIRTHDAYS_COLUMNS, rows)
+    return ""
 
 
 # hello: Отримати вітання від бота.
@@ -285,66 +317,68 @@ def hello(_, __):
 
 
 def show_help(_, __):
-    console = Console()
+    rows = [
+        ["add", "[name] [phone]", "Add new contact"],
+        ["change", "[name] [old] [new]", "Change phone number"],
+        ["phone", "[name]", "Show phone number"],
+        ["all | list", "", "Show all contacts"],
+        ["add-birthday | add-b", "[name] [DD.MM.YYYY]", "Add birthday"],
+        ["show-birthday", "[name]", "Show birthday"],
+        ["birthdays", "", "Upcoming birthdays (7 days)"],
+        ["exit | close", "", "Exit program"]
+    ]
 
-    table = Table(title="Available Commands", show_header=True, header_style="bold cyan")
-    table.add_column("Command", style="green", width=30)
-    table.add_column("Arguments", style="cyan", width=20)
-    table.add_column("Description", style="white")
-
-    table.add_row("add", "[name] [phone]", "Add new contact", style="italic")
-    table.add_row("change", "[name] [old] [new]", "Change phone number", style="italic")
-    table.add_row("phone", "[name]", "Show phone number", style="italic")
-    table.add_row("all | list", "", "Show all contacts", style="italic")
-    table.add_row("add-birthday | add-b", "[name] [DD.MM.YYYY]", "Add birthday", style="italic")
-    table.add_row("show-birthday", "[name]", "Show birthday", style="italic")
-    table.add_row("birthdays", "", "Upcoming birthdays (7 days)", style="italic")
-    table.add_row("exit | close", "", "Exit program", style="italic")
-
-    console.print(table, markup=False)
+    create_table("Available Commands", HELP_COLUMNS, rows, markup=False)
     return ""
+
+
+commands = {
+    "add": add,
+    "change": change,
+    "phone": phone,
+    "all": all,
+    "list": all,
+    "show-birthday": show_birthday,
+    "add-b": add_birthday,
+    "birthdays": birthdays,
+    "hi": hello,
+    "hello": hello,
+    "help": show_help,
+}
+
+custom_style = Style.from_dict({
+    '': '#ffff00 bold',
+    'completion-menu': 'bg:#0000aa #ffffff',
+    'completion-menu.completion': 'bg:#0000aa #cccccc',
+    'completion-menu.completion.current': 'bg:#00aaaa #000000 bold',
+})
 
 
 def main():
     book = load_data()
     print("Welcome to the assistant bot!")
 
+    command_completer = WordCompleter(
+        list(commands.keys()) + ["close", "exit"],
+        ignore_case=True,
+        sentence=True
+    )
+
+    session = PromptSession(
+        completer=command_completer,
+        style=custom_style
+    )
+
     try:
-        commands = {
-            "add": add,
-            "change": change,
-            "phone": phone,
-            "all": all,
-            "list": all,
-            "show-birthday": show_birthday,
-            "add-b": add_birthday,
-            "birthdays": birthdays,
-            "hi": hello,
-            "hello": hello,
-            "help": show_help,
-        }
-
-        custom_style = questionary.Style([
-            ('qmark', ''),
-            ('question', 'fg:#ffff00 bold'),
-            ('answer', 'bg:#0000aa fg:#ffcc00 bold'),
-            ('text', 'fg:#cccccc'),
-            ('selected', 'bg:#00aaaa fg:#000000'),
-        ])
-
         while True:
-            user_input = questionary.autocomplete(
-                "Enter command:",
-                choices=list(commands.keys()) + ["close", "exit"],
-                style=custom_style
-            ).ask()
-
-            if user_input is None:
+            try:
+                user_input = session.prompt("Enter command: ")
+            except (EOFError, KeyboardInterrupt):
                 print("\nProgram finished.\n -Have a good day user! ©Tron.\n")
                 break
 
             if not user_input.strip():
-                print("Please enter a command user.")
+                print("Please enter a command user (write help for more info).")
                 continue
 
             command, *args = user_input.split()
@@ -360,8 +394,6 @@ def main():
             else:
                 print("Invalid command.")
 
-    except KeyboardInterrupt:
-        print("\nProgram finished.\n -Have a good day user! ©Tron.\n ")
     finally:
         save_data(book=book)
 
