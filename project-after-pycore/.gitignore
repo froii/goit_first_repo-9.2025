@@ -27,6 +27,9 @@ wheels/
 files/
 *.pkl
 
+# PyPI credentials (NEVER commit this!)
+.pypirc
+
 # IDE
 .vscode/
 .idea/

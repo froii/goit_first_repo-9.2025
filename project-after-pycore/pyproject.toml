@@ -3,14 +3,14 @@ requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "assistant-bot"
+name = "assistant-bot-froii"
 version = "1.0.0"
 description = "Personal assistant bot for managing contacts with birthdays"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Oleksa", email = "lestyshchenko@gmail.com"}
 ]
 keywords = ["assistant", "contacts", "birthday", "cli"]
 classifiers = [
@@ -31,5 +31,5 @@ dependencies = [
 assistant-bot = "main:main"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/assistant-bot"
-Repository = "https://github.com/yourusername/assistant-bot"
+Homepage = "https://github.com/froii/goit_first_repo-9.2025/tree/main/project-after-pycore"
+Repository = "https://github.com/froii/goit_first_repo-9.2025"

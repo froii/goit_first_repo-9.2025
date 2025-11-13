@@ -1,0 +1,28 @@
+# Include documentation and configuration files
+include README.md
+include LICENSE
+include requirements.txt
+include CHECKLIST.md
+include STORAGE_USAGE.md
+include TESTING.md
+
+# Include all markdown files in the project
+recursive-include . *.md
+
+# Exclude unnecessary files from distribution
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .DS_Store
+global-exclude *.swp
+global-exclude .gitignore
+
+# Exclude test and development files
+prune tests
+prune .git
+prune venv
+prune assistant_bot.egg-info
+prune files
+
+# Exclude build artifacts
+prune dist
+prune build

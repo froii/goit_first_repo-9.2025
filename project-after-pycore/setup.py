@@ -1,5 +1,5 @@
 """Setup configuration for assistant-bot package."""
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -8,14 +8,14 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
     requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
 setup(
-    name="assistant-bot",
+    name="assistant-bot-froii",
     version="1.0.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Oleksa",
+    author_email="lestyshchenko@gmail.com",
     description="Personal assistant bot for managing contacts with birthdays",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/assistant-bot",
+    url="https://github.com/froii/goit_first_repo-9.2025/tree/main/project-after-pycore",
     py_modules=["main", "constants"],
     packages=find_packages(),
     classifiers=[
