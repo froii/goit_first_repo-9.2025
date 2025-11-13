@@ -1,3 +1,5 @@
+### command for running this bot locally as packages
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple assistant-bot-froii
 
 ### Спосіб 1: Без встановлення (швидкий тест)
 Встановити залежності - pip install -r project-after-pycore/requirements.txt
