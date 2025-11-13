@@ -1,20 +1,25 @@
-### command for running this bot locally as packages
+### Спосіб 1: Встановлення з TestPyPI
+Встановити пакет
 pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple assistant-bot-froii
 
-### Спосіб 1: Без встановлення (швидкий тест)
-Встановити залежності - pip install -r project-after-pycore/requirements.txt
-
-Запустити з pickle (за замовчуванням) - python project-after-pycore/main.py
-Або з JSON - python project-after-pycore/main.py json
-Або з CSV  - python project-after-pycore/main.py csv
+Запустити
+assistant-bot           # pickle (за замовчуванням)
+assistant-bot json      # JSON формат
+assistant-bot csv       # CSV формат
 
 ### Спосіб 2: Встановити як пакет (рекомендовано)
-Перейти в директорію проєкту - cd project-after-pycore
-Встановити пакет - pip install -e .
-Тепер можна викликати з будь-якого місця
-    assistant-bot
-    assistant-bot json
-    assistant-bot csv
+github папка `https://github.com/froii/goit_first_repo-9.2025/tree/main/project-after-pycore`
+
+github репозиторій з іншими файлами домашньої роботи `git clone https://github.com/froii/goit_first_repo-9.2025.git`
+відкрити папку проекту `cd goit_first_repo-9.2025/project-after-pycore`
+
+Встановити залежності
+pip install -r requirements.txt
+
+Запустити
+python main.py          # pickle
+python main.py json     # JSON
+python main.py csv      # CSV
 
 ### Особливості
 - ✅ Управління контактами (додавання, редагування, видалення)
