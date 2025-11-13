@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "assistant-bot"
+version = "1.0.0"
+description = "Personal assistant bot for managing contacts with birthdays"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+keywords = ["assistant", "contacts", "birthday", "cli"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "prompt-toolkit>=3.0.0",
+    "rich>=13.0.0",
+]
+
+[project.scripts]
+assistant-bot = "main:main"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/assistant-bot"
+Repository = "https://github.com/yourusername/assistant-bot"
