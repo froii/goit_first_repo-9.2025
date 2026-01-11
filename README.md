@@ -3,15 +3,15 @@ go be ready for creating calculator !
 
 
 
-# Створення venv
+## Створення venv
 python -m venv venv
 
-# Активація
+## Активація
 source venv/bin/activate      # Linux/Mac
 venv\Scripts\activate         # Windows
 source venv/Scripts/activate  # Git Bash
 
-# Збереження пакетів
+## Збереження пакетів
 pip freeze > requirements.txt
 Відновлення з файлу:
 pip install -r requirements.txt
